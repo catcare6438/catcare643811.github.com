@@ -394,6 +394,366 @@ function renderGallery(){
   var dots=document.getElementById('gallery-dots');
 
   if(!galleryPhotos.length){
+    ph.style.display='flex'; prev.style.di.hero h1{font-size:1.9rem;font-weight:900;line-height:1.3;margin-bottom:10px;background:linear-gradient(135deg,var(--blue),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--text-mid);font-size:0.88rem;line-height:1.7;max-width:400px;margin:0 auto 20px}
+.hero-stats{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.stat-pill{background:rgba(255,255,255,0.88);border:1.5px solid var(--blue-light);border-radius:20px;padding:6px 18px;font-size:0.8rem;color:var(--text-mid);font-weight:600}
+.stat-pill b{color:var(--blue);font-size:1rem}
+
+/* FILTER */
+.filter-wrap{max-width:880px;margin:0 auto;padding:16px 16px 0}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fbtn{padding:7px 16px;border:2px solid var(--sand);border-radius:20px;background:white;font-family:inherit;font-size:0.78rem;cursor:pointer;font-weight:600;color:var(--text-soft);transition:all .2s}
+.fbtn.active{border-color:var(--blue);background:var(--blue-pale);color:var(--blue)}
+.search-box{flex:1;min-width:150px;padding:8px 16px;border:2px solid var(--sand);border-radius:20px;font-family:inherit;font-size:0.82rem;outline:none;background:white}
+.search-box:focus{border-color:var(--blue)}
+
+/* GRID */
+.cats-grid{max-width:880px;margin:0 auto;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+
+/* CARD */
+.cat-card{background:rgba(255,255,255,0.92);border-radius:22px;overflow:hidden;box-shadow:0 4px 18px rgba(168,216,234,0.2);border:1.5px solid rgba(168,216,234,0.28);transition:transform .25s,box-shadow .25s;cursor:pointer}
+.cat-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(168,216,234,0.38)}
+.cat-img-wrap{position:relative;padding-top:100%;overflow:hidden;background:linear-gradient(135deg,var(--blue-pale),var(--pink-pale))}
+.cat-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.cat-card:hover .cat-img{transform:scale(1.05)}
+.cat-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.5rem;opacity:.3}
+.status-badge{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:12px;font-size:0.68rem;font-weight:700;backdrop-filter:blur(6px)}
+.s-avail{background:rgba(125,207,149,0.9);color:white}
+.s-reserved{background:rgba(244,181,106,0.9);color:white}
+.s-adopted{background:rgba(160,160,160,0.85);color:white}
+.cat-body{padding:14px}
+.cat-name{font-size:1rem;font-weight:900;color:var(--text);margin-bottom:5px}
+.cat-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.mtag{font-size:0.68rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.t-age{background:var(--blue-pale);color:var(--blue)}
+.t-m{background:#e8f0fe;color:#3050c8}
+.t-f{background:var(--pink-pale);color:#c040a0}
+.t-neu{background:var(--green-pale);color:#2d7a4a}
+.cat-desc{font-size:0.78rem;color:var(--text-mid);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ptags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+.ptag{font-size:0.66rem;padding:2px 7px;border-radius:8px;background:var(--warm);color:var(--text-mid)}
+.adopt-btn{width:100%;padding:9px;color:white;border:none;border-radius:11px;font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s}
+.adopt-btn.avail{background:linear-gradient(135deg,var(--pink),#f08080)}
+.adopt-btn.reserved{background:linear-gradient(135deg,#f4b56a,#e8a030)}
+.adopt-btn.adopted{background:linear-gradient(135deg,#aaa,#888);cursor:default}
+
+/* LOADING/EMPTY */
+.loading{text-align:center;padding:60px 20px;color:var(--text-soft);grid-column:1/-1}
+.loading-spin{font-size:2.5rem;display:block;margin-bottom:12px;animation:spin 1.5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(60,100,140,0.45);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;z-index:200;overflow-y:auto;padding:16px}
+.overlay.show{display:flex}
+.modal{background:white;border-radius:24px;max-width:460px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(107,174,214,0.35);border:2px solid var(--blue-light);animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* 相片輪播 */
+.modal-gallery{position:relative;padding-top:65%;border-radius:22px 22px 0 0;overflow:hidden;background:linear-gradient(135deg,var(--blue-pale),var(--pink-pale))}
+.gallery-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.gallery-img.active{display:block}
+.gallery-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.25}
+.gallery-prev,.gallery-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.85);border:none;border-radius:50%;width:36px;height:36px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.gallery-prev{left:10px}
+.gallery-next{right:10px}
+.gallery-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.gdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55);transition:background .2s}
+.gdot.active{background:white}
+.modal-close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;font-size:0.9rem;cursor:pointer;font-weight:700;color:var(--text-mid);z-index:3}
+
+.modal-body{padding:20px}
+.modal-name{font-size:1.35rem;font-weight:900;color:var(--text);margin-bottom:8px}
+.modal-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.minfo{background:var(--cream);border-radius:10px;padding:10px 12px}
+.minfo-l{font-size:0.68rem;font-weight:700;color:var(--text-soft);margin-bottom:2px}
+.minfo-v{font-size:0.82rem;font-weight:700;color:var(--text)}
+.modal-label{font-size:0.72rem;font-weight:700;color:var(--text-soft);letter-spacing:.08em;margin-bottom:5px}
+.modal-desc{font-size:0.84rem;color:var(--text-mid);line-height:1.75;margin-bottom:14px}
+.modal-ptags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.modal-adopt-btn{width:100%;padding:14px;color:white;border:none;border-radius:14px;font-family:inherit;font-size:0.98rem;font-weight:900;cursor:pointer;letter-spacing:.06em;box-shadow:0 5px 16px rgba(244,160,160,.4);transition:transform .15s;margin-bottom:6px}
+.modal-adopt-btn:hover{transform:translateY(-2px)}
+.modal-adopt-btn.avail{background:linear-gradient(135deg,var(--pink),#f08080 50%,var(--peach))}
+.modal-adopt-btn.reserved{background:linear-gradient(135deg,#f4b56a,#e8a030)}
+.modal-adopt-btn.adopted{background:linear-gradient(135deg,#aaa,#888);cursor:default}
+.line-note{text-align:center;font-size:0.72rem;color:var(--text-soft)}
+
+/* FOOTER */
+.footer{text-align:center;padding:30px 20px;font-size:0.78rem;color:var(--text-soft);line-height:1.9}
+
+@media(max-width:480px){
+  .hero h1{font-size:1.55rem}
+  .cats-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .cat-body{padding:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <span class="logo-icon">🐱</span>
+    <div>
+      <div class="logo-name">浪貓不浪</div>
+      <div class="logo-sub">中途之家</div>
+    </div>
+  </div>
+  <a class="admin-link" href="https://astonishing-starburst-5ac230.netlify.app/cats-admin.html">⚙️ 管理</a>
+</div>
+
+<div class="hero">
+  <div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
+  <span class="paw" style="top:20px;left:12%">🐾</span>
+  <span class="paw" style="top:50px;right:14%">🐾</span>
+  <span class="paw" style="bottom:10px;left:44%">🐾</span>
+  <div class="hero-inner">
+    <span class="hero-emoji">🐱✨</span>
+    <h1>等待一個家<br>的毛孩們</h1>
+    <p class="hero-sub">每一隻貓咪都值得被愛<br>牠們正在中途之家等待屬於自己的永遠家庭 💕</p>
+    <div class="hero-stats">
+      <div class="stat-pill">目前收容 <b id="stat-total">—</b> 隻</div>
+      <div class="stat-pill">待領養 <b id="stat-avail">—</b> 隻</div>
+    </div>
+  </div>
+</div>
+
+<div class="filter-wrap">
+  <div class="filter-row">
+    <button class="fbtn active" onclick="setFilter(this,'all')">全部</button>
+    <button class="fbtn" onclick="setFilter(this,'待領養')">🟢 待領養</button>
+    <button class="fbtn" onclick="setFilter(this,'預約中')">🟡 預約中</button>
+    <button class="fbtn" onclick="setFilter(this,'已領養')">🩶 已領養</button>
+    <button class="fbtn" onclick="setFilter(this,'公')">♂ 男生</button>
+    <button class="fbtn" onclick="setFilter(this,'女')">♀ 女生</button>
+    <input class="search-box" id="search-box" placeholder="🔍 搜尋貓咪名字…" oninput="renderCats()">
+  </div>
+</div>
+
+<div class="cats-grid" id="cats-grid">
+  <div class="loading"><span class="loading-spin">🐾</span>載入中…</div>
+</div>
+
+<!-- 詳情 Modal -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-gallery" id="modal-gallery">
+      <div class="gallery-placeholder" id="gallery-placeholder">🐱</div>
+      <button class="gallery-prev" id="gallery-prev" onclick="galleryNav(-1)" style="display:none">‹</button>
+      <button class="gallery-next" id="gallery-next" onclick="galleryNav(1)" style="display:none">›</button>
+      <div class="gallery-dots" id="gallery-dots"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-grid" id="modal-grid"></div>
+      <div class="modal-label">🐾 個性介紹</div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div id="modal-ptags-wrap">
+        <div class="modal-label">✨ 個性標籤</div>
+        <div class="modal-ptags" id="modal-ptags"></div>
+      </div>
+      <button class="modal-adopt-btn" id="modal-adopt-btn" onclick="goLine()"></button>
+      <div class="line-note">點擊後將開啟 LINE 官方帳號與我們聯繫 🐾</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div style="font-size:1.2rem;margin-bottom:6px">🐱</div>
+  <div style="font-weight:700;color:var(--text-mid)">浪貓不浪中途之家</div>
+  <div>每一隻貓咪都有故事，每一個家庭都值得一隻好貓</div>
+</div>
+
+<script>
+var LINE_ID = '@151ffkpg';
+var AIRTABLE_API_KEY = 'YOUR_AIRTABLE_API_KEY';
+var AIRTABLE_BASE_ID = 'YOUR_BASE_ID';
+var AIRTABLE_TABLE   = 'Cats';
+
+var allCats = [];
+var currentFilter = 'all';
+var currentCat = null;
+var galleryIndex = 0;
+var galleryPhotos = [];
+
+// 示範資料
+var DEMO = [
+  {id:'d1',name:'橘寶',age:'1歲',gender:'公',neutered:'已結紮',status:'待領養',
+   photos:[''],desc:'超級黏人的橘貓男孩，喜歡跟在人旁邊，很愛被摸下巴。個性溫和，跟其他貓咪相處也很好。',
+   personality:'親人,愛撒嬌,活潑',health:'健康'},
+  {id:'d2',name:'小黑',age:'3歲',gender:'女',neutered:'已結紮',status:'待領養',
+   photos:[''],desc:'文靜的黑色女孩，需要一點時間熟悉新環境，熟了之後非常依賴主人。',
+   personality:'文靜,黏人,怕生',health:'健康'},
+  {id:'d3',name:'花花',age:'2歲',gender:'女',neutered:'已結紮',status:'預約中',
+   photos:[''],desc:'三花小美女，個性開朗好奇，喜歡玩逗貓棒。',
+   personality:'好奇,愛玩,開朗',health:'健康'},
+  {id:'d4',name:'虎斑弟',age:'6個月',gender:'公',neutered:'未結紮',status:'待領養',
+   photos:[''],desc:'活潑的虎斑小男孩，每天都在探索世界。',
+   personality:'活潑,好奇,調皮',health:'健康'},
+];
+
+function convertPhoto(url){
+  if(!url||url.trim()==='')return '';
+  var m=url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if(m) return 'https://drive.google.com/uc?export=view&id='+m[1];
+  var m2=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m2) return 'https://drive.google.com/uc?export=view&id='+m2[1];
+  return url;
+}
+
+async function loadCats(){
+  if(AIRTABLE_API_KEY==='YOUR_AIRTABLE_API_KEY'){
+    // 示範模式：結合 localStorage 中已建立的貓咪
+    var stored = JSON.parse(localStorage.getItem('catnest_cats')||'[]');
+    allCats = stored.length ? stored : DEMO;
+    renderCats(); updateStats(); return;
+  }
+  try{
+    var res=await fetch('https://api.airtable.com/v0/'+AIRTABLE_BASE_ID+'/'+encodeURIComponent(AIRTABLE_TABLE)+'?sort[0][field]=名字',
+      {headers:{'Authorization':'Bearer '+AIRTABLE_API_KEY}});
+    var data=await res.json();
+    allCats=(data.records||[]).map(function(r){
+      var f=r.fields;
+      // 支援多張照片（逗號分隔）
+      var photoStr=f['照片']||f['照片連結']||'';
+      var photos=photoStr.split(',').map(function(p){return convertPhoto(p.trim());}).filter(Boolean);
+      return {
+        id:r.id, name:f['名字']||'', age:f['年齡']||'',
+        gender:f['性別']||'', neutered:f['結紮狀態']||'',
+        status:f['領養狀態']||'待領養', photos:photos,
+        desc:f['簡介']||'', personality:f['個性標籤']||'',
+        health:f['健康狀況']||''
+      };
+    });
+    renderCats(); updateStats();
+  }catch(e){
+    document.getElementById('cats-grid').innerHTML='<div class="loading">載入失敗，請確認 Airtable 設定</div>';
+  }
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent=allCats.length;
+  document.getElementById('stat-avail').textContent=allCats.filter(function(c){return c.status==='待領養';}).length;
+}
+
+function setFilter(btn,f){
+  currentFilter=f;
+  document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderCats();
+}
+
+function renderCats(){
+  var search=(document.getElementById('search-box').value||'').toLowerCase();
+  var list=allCats.filter(function(c){
+    var mf=currentFilter==='all'||c.status===currentFilter||c.gender===currentFilter;
+    var ms=!search||c.name.toLowerCase().includes(search);
+    return mf&&ms;
+  });
+
+  var grid=document.getElementById('cats-grid');
+  if(!list.length){
+    grid.innerHTML='<div class="loading" style="animation:none"><div style="font-size:2.5rem">😿</div><div style="margin-top:10px">目前沒有符合條件的毛孩</div></div>';
+    return;
+  }
+
+  var sc={待領養:'avail',預約中:'reserved',已領養:'adopted'};
+  var sl={待領養:'待領養',預約中:'預約中',已領養:'已領養'};
+  var bt={待領養:'💚 我想認識牠！',預約中:'💛 預約中',已領養:'🩶 已找到新家'};
+
+  grid.innerHTML=list.map(function(cat){
+    var photo=cat.photos&&cat.photos[0]?cat.photos[0]:'';
+    var imgH=photo
+      ?'<img class="cat-img" src="'+photo+'" alt="'+cat.name+'" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">'
+       +'<div class="cat-placeholder" style="display:none">🐱</div>'
+      :'<div class="cat-placeholder">🐱</div>';
+    var s=sc[cat.status]||'avail';
+    var ptH=cat.personality?cat.personality.split(',').slice(0,3).map(function(p){
+      return '<span class="ptag">'+p.trim()+'</span>';}).join(''):'';
+    return '<div class="cat-card" onclick="openModal(\''+cat.id+'\')">'+
+      '<div class="cat-img-wrap">'+imgH+
+      '<span class="status-badge s-'+s+'">'+sl[cat.status]+'</span></div>'+
+      '<div class="cat-body">'+
+      '<div class="cat-name">'+cat.name+'</div>'+
+      '<div class="cat-meta">'+
+      (cat.age?'<span class="mtag t-age">🎂 '+cat.age+'</span>':'')+
+      (cat.gender==='公'?'<span class="mtag t-m">♂ 男生</span>':'')+
+      (cat.gender==='女'?'<span class="mtag t-f">♀ 女生</span>':'')+
+      (cat.neutered==='已結紮'?'<span class="mtag t-neu">✂️ 已結紮</span>':'')+
+      '</div>'+
+      (cat.desc?'<div class="cat-desc">'+cat.desc+'</div>':'')+
+      (ptH?'<div class="ptags">'+ptH+'</div>':'')+
+      '<button class="adopt-btn '+s+'">'+bt[cat.status]+'</button>'+
+      '</div></div>';
+  }).join('');
+}
+
+// ── Modal ──
+function openModal(id){
+  var cat=allCats.find(function(c){return c.id===id;});
+  if(!cat)return;
+  currentCat=cat;
+
+  // 相片輪播
+  galleryPhotos=(cat.photos||[]).filter(Boolean);
+  galleryIndex=0;
+  renderGallery();
+
+  document.getElementById('modal-name').textContent=cat.name;
+
+  var sc={待領養:'avail',預約中:'reserved',已領養:'adopted'};
+  var s=sc[cat.status]||'avail';
+
+  // meta 標籤
+  var meta='';
+  if(cat.age) meta+='<span class="mtag t-age">🎂 '+cat.age+'</span>';
+  if(cat.gender==='公') meta+='<span class="mtag t-m">♂ 男生</span>';
+  if(cat.gender==='女') meta+='<span class="mtag t-f">♀ 女生</span>';
+  if(cat.neutered==='已結紮') meta+='<span class="mtag t-neu">✂️ 已結紮</span>';
+  var sbadge={avail:'s-avail',reserved:'s-reserved',adopted:'s-adopted'};
+  meta+='<span class="status-badge '+sbadge[s]+'" style="position:static">'+cat.status+'</span>';
+  document.getElementById('modal-meta').innerHTML=meta;
+
+  // 健康資訊
+  var grid='';
+  if(cat.health) grid+='<div class="minfo"><div class="minfo-l">健康狀況</div><div class="minfo-v">'+cat.health+'</div></div>';
+  if(cat.neutered) grid+='<div class="minfo"><div class="minfo-l">結紮</div><div class="minfo-v">'+cat.neutered+'</div></div>';
+  document.getElementById('modal-grid').innerHTML=grid;
+
+  document.getElementById('modal-desc').textContent=cat.desc||'暫無介紹';
+
+  // 個性標籤
+  if(cat.personality){
+    document.getElementById('modal-ptags').innerHTML=cat.personality.split(',').map(function(p){
+      return '<span class="ptag" style="font-size:.76rem;padding:4px 10px">'+p.trim()+'</span>';}).join('');
+    document.getElementById('modal-ptags-wrap').style.display='block';
+  } else {
+    document.getElementById('modal-ptags-wrap').style.display='none';
+  }
+
+  var btn=document.getElementById('modal-adopt-btn');
+  var btxt={待領養:'💚 我想認識牠！聯絡領養',預約中:'💛 目前預約中，可登記候補',已領養:'🩶 牠已找到新家了 ♡'};
+  btn.textContent=btxt[cat.status]||btxt['待領養'];
+  btn.className='modal-adopt-btn '+s;
+  btn.disabled=cat.status==='已領養';
+
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function renderGallery(){
+  var gallery=document.getElementById('modal-gallery');
+  // 清除舊圖片
+  gallery.querySelectorAll('.gallery-img').forEach(function(el){el.remove();});
+
+  var ph=document.getElementById('gallery-placeholder');
+  var prev=document.getElementById('gallery-prev');
+  var next=document.getElementById('gallery-next');
+  var dots=document.getElementById('gallery-dots');
+
+  if(!galleryPhotos.length){
     ph.style.display='flex'; prev.style.di<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
