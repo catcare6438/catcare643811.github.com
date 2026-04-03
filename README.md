@@ -2,173 +2,130 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>浪貓不浪 🐾 官方網站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>浪貓不浪 🐾 官方 App</title>
     <style>
-        :root { --p: #ff8fab; --bg: #fff6f8; --h: #ffd1dc; --b: #a2d2ff; --dark: #555; }
-        body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; color: var(--dark); line-height: 1.6; }
-        header { background: var(--h); padding: 40px 15px; text-align: center; border-radius: 0 0 40px 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .nav { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-        .btn { padding: 12px 24px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-m { background: var(--p); color: white; }
-        .btn-s { background: var(--b); color: white; }
-        .container { padding: 30px 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center; }
-        .card img { width: 100%; height: 260px; object-fit: cover; cursor: pointer; border-bottom: 5px solid var(--h); }
-        .card-body { padding: 20px; }
-        .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal { background: white; width: 90%; max-width: 480px; padding: 30px; border-radius: 30px; position: relative; max-height: 85vh; overflow-y: auto; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #ddd; }
-        .form-group input, .form-group textarea { width: 100%; box-sizing: border-box; margin-bottom: 15px; padding: 14px; border-radius: 18px; border: 1px solid #eee; background: #fdfdfd; }
-        footer { text-align: center; padding: 60px 20px; opacity: 0.7; font-size: 13px; }
-        .loading { grid-column: 1/-1; text-align: center; padding: 50px; font-size: 1.2rem; color: var(--p); }
+        :root { --p: #ff8fab; --bg: #fffcfd; --h: #ffd1dc; --b: #a2d2ff; --text: #444; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        
+        /* 頂部標題 */
+        header { background: white; padding: 18px; text-align: center; border-bottom: 1px solid #f0f0f0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        header h1 { margin: 0; font-size: 1.3rem; color: var(--p); letter-spacing: 1px; }
+
+        /* 內容容器 */
+        .container { padding: 12px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        
+        /* 貓咪卡片 */
+        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f8f8f8; display: flex; flex-direction: column; transition: 0.2s; }
+        .card:active { transform: scale(0.96); opacity: 0.8; }
+        .card img { width: 100%; height: 150px; object-fit: cover; background: #fdfdfd; }
+        .card-body { padding: 10px; }
+        .card h3 { margin: 0; font-size: 0.95rem; color: #333; }
+        .card p { font-size: 0.75rem; color: #999; margin: 4px 0 0 0; }
+
+        /* 底部 App 導覽列 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { background: none; border: none; color: #bbb; font-size: 0.7rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; width: 33%; }
+        .nav-item.active { color: var(--p); font-weight: bold; }
+        .nav-icon { font-size: 1.4rem; margin-bottom: 3px; }
+
+        /* 從底部彈出的詳細視窗 */
+        .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-end; }
+        .modal { background: white; width: 100%; padding: 25px 20px; border-radius: 30px 30px 0 0; animation: slideUp 0.3s ease-out; box-sizing: border-box; max-height: 85vh; overflow-y: auto; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .btn-action { width: 100%; padding: 14px; border-radius: 20px; border: none; background: var(--p); color: white; font-weight: bold; font-size: 1rem; margin-top: 15px; box-shadow: 0 4px 10px rgba(255,143,171,0.3); }
+        .loading { text-align: center; padding: 100px 20px; color: var(--p); grid-column: 1/-1; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>🐾 浪貓不浪</h1>
-    <p>溫柔守護，讓愛延續</p>
-    <div class="nav">
-        <button class="btn btn-m" onclick="loadCats('waiting')">🏠 正在等家</button>
-        <button class="btn btn-m" onclick="loadCats('adopted')">🎊 幸福回娘家</button>
-        <button class="btn btn-s" onclick="openAuthModal()">🔐 系統登入</button>
-    </div>
-</header>
+<header><h1>🐾 浪貓不浪</h1></header>
 
 <div id="display-area" class="container">
-    <div class="loading">正在同步雲端資料庫...</div>
+    <div class="loading">正在連線雲端資料庫...</div>
 </div>
 
-<div id="modalOverlay" class="overlay">
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('waiting', this)">
+        <span class="nav-icon">🏠</span>等家孩子
+    </button>
+    <button class="nav-item" onclick="switchTab('adopted', this)">
+        <span class="nav-icon">🎉</span>幸福回娘家
+    </button>
+    <button class="nav-item" onclick="openLogin()">
+        <span class="nav-icon">⚙️</span>管理後台
+    </button>
+</nav>
+
+<div id="modalOverlay" class="overlay" onclick="if(event.target==this)closeModal()">
     <div class="modal">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle" style="color: var(--p); text-align: center; margin-top: 0;"></h2>
-        <div id="modalBody" class="form-group"></div>
+        <div id="modalContent"></div>
     </div>
 </div>
 
-<footer>🐾 貓窩裏 到府寵物褓姆 💕</footer>
-
 <script>
-    /** --- 核心數據配置 (已為您校對) --- **/
-    const WAITING_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTf9z00p3CAs7W9W3N34oO07uNfVcl4tVcl4vVcl/pub?output=csv"; 
-    const ADOPTED_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR_xX1L_O1X3_Y7W9N6P07_X9oO7P6J1_Jcl6ZJ/pub?output=csv";
-    const GAS_URL = "在此填入你的GAS部署網址"; 
-    const ADMIN_CODE = "715715";
+    /** --- 數據源配置 --- **/
+    // 自動轉換為資料抓取格式 (CSV)
+    const WAITING_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCdE9UVNcCsau-k6E2wPWR8H8Mh76hMluxKjH8SZQLW2Vp7ZvZQSvDz8lRLhJwq4LLPXu0qaD9aQhR/pub?output=csv";
+    const ADOPTED_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSzApIyvMpCu12nSWMliqX3xa2_mDqKHtXaK1XtUgaAh0l_KNIMf0mCu7aj6UXzJYEaUa3BgIrCRW3O/pub?output=csv";
 
-    let catsData = [];
+    let currentCats = [];
 
-    async function loadCats(type) {
+    async function fetchData(type) {
         const display = document.getElementById('display-area');
-        display.innerHTML = '<div class="loading">正在抓取最新檔案...</div>';
         const url = (type === 'waiting') ? WAITING_CSV : ADOPTED_CSV;
-
+        
         try {
-            const res = await fetch(url);
-            const text = await res.text();
+            // 加入隨機數防止快取，確保資料是最新的
+            const response = await fetch(url + '&t=' + Date.now());
+            const text = await response.text();
             
-            // 使用正則表達式解析 CSV，防止內容中有逗號導致錯誤
-            const rows = text.split(/\r?\n/).slice(1);
-            catsData = [];
+            // 解析 CSV 每一行
+            const rows = text.split('\n').map(row => row.split(','));
+            currentCats = [];
             let html = "";
 
-            rows.forEach(row => {
-                const col = row.split(',');
-                if (col.length < 5) return;
-                
-                // 清除可能的引號
-                const name = col[1].replace(/"/g, "") || "神秘貓咪";
-                const age = col[2].replace(/"/g, "") || "不詳";
-                const desc = col[4].replace(/"/g, "") || "這隻貓咪很害羞，還沒有自我介紹。";
-                const img = col[5] ? col[5].replace(/"/g, "").trim() : "https://placehold.co/400x300?text=No+Image";
-                
-                catsData.push({ name, age, desc, img });
+            // 從第二列開始跑 (i=1)
+            for (let i = 1; i < rows.length; i++) {
+                const col = rows[i];
+                if (col.length < 5) continue;
+
+                const cat = {
+                    name: col[1]?.replace(/"/g, "").trim(),
+                    age: col[2]?.replace(/"/g, "").trim(),
+                    desc: col[4]?.replace(/"/g, "").trim(),
+                    img: col[5]?.replace(/"/g, "").trim() || "https://placehold.co/400x400?text=圖片載入中"
+                };
+                currentCats.push(cat);
 
                 html += `
-                    <div class="card">
-                        <img src="${img}" onclick="viewDetails('${name}')" onerror="this.src='https://placehold.co/400x300?text=喵~照片迷路了'">
+                    <div class="card" onclick="showCatDetail('${cat.name}')">
+                        <img src="${cat.img}" onerror="this.src='https://placehold.co/400x300?text=喵~照片迷路了'">
                         <div class="card-body">
-                            <h3>${name}</h3>
-                            <p>${age}</p>
-                            <button class="btn btn-s" style="width:100%" onclick="viewDetails('${name}')">查看詳情</button>
+                            <h3>${cat.name}</h3>
+                            <p>${cat.age}</p>
                         </div>
                     </div>`;
-            });
-            display.innerHTML = html || '<div class="loading">目前暫無資料，請確認試算表已「發佈」。</div>';
-        } catch (e) { 
-            display.innerHTML = '<div class="loading">網路連線異常，請確認試算表權限。</div>'; 
+            }
+            display.innerHTML = html || '<div class="loading">目前沒有貓咪資訊喔！</div>';
+        } catch (err) {
+            display.innerHTML = '<div class="loading" style="color:red">讀取失敗<br>請確認試算表已「發佈到網路」</div>';
         }
     }
 
-    function openAuthModal() {
-        showModal("系統登入", `
-            <input type="text" id="loginUser" placeholder="管理員填 admin / 飼主填貓名">
-            <input type="password" id="loginPwd" placeholder="請輸入密碼">
-            <button class="btn btn-m" style="width:100%" onclick="handleLogin()">確認進入</button>
-        `);
+    function switchTab(type, el) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        fetchData(type);
     }
 
-    function handleLogin() {
-        const user = document.getElementById('loginUser').value.trim();
-        const pwd = document.getElementById('loginPwd').value.trim();
-        if (user === "admin" && pwd === ADMIN_CODE) { showAdminPanel(); } 
-        else if (pwd === user + "715") { showOwnerPanel(user); } 
-        else { alert("資訊錯誤！管理員請用 admin 登入"); }
-    }
-
-    function showAdminPanel() {
-        showModal("管理員後台", `
-            <input id="fName" placeholder="貓咪姓名">
-            <input id="fAge" placeholder="年齡/性別">
-            <input id="fImg" placeholder="主要照片 URL">
-            <textarea id="fDesc" placeholder="故事內容..." rows="4"></textarea>
-            <button class="btn btn-m" style="width:100%" onclick="sendData()">發佈新資訊</button>
-        `);
-    }
-
-    function showOwnerPanel(name) {
-        showModal(`${name} 的家長`, `
-            <input id="fImg" placeholder="生活照網址 (URL)">
-            <textarea id="fDesc" placeholder="分享近況..." rows="4"></textarea>
-            <button class="btn btn-s" style="width:100%" onclick="sendData('daily', '${name}')">送出回娘家分享</button>
-        `);
-    }
-
-    async function sendData(type = 'new', name = "") {
-        const payload = {
-            action: type,
-            name: name || document.getElementById('fName').value,
-            img: document.getElementById('fImg').value,
-            desc: document.getElementById('fDesc').value,
-            age: document.getElementById('fAge')?.value || "",
-            pwd: ADMIN_CODE
-        };
-        alert("資料同步中...");
-        try {
-            await fetch(GAS_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-            alert("同步完成！"); closeModal(); loadCats('waiting');
-        } catch (e) { alert("發送失敗。"); }
-    }
-
-    function showModal(t, b) {
-        document.getElementById('modalOverlay').style.display = 'flex';
-        document.getElementById('modalTitle').innerText = t;
-        document.getElementById('modalBody').innerHTML = b;
-    }
-    function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
-    function viewDetails(name) {
-        const cat = catsData.find(c => c.name === name);
+    function showCatDetail(name) {
+        const cat = currentCats.find(c => c.name === name);
         if(!cat) return;
-        showModal(`${name} 的故事`, `
-            <img src="${cat.img}" style="width:100%; border-radius:20px; margin-bottom:15px;" onerror="this.src='https://placehold.co/400x300?text=圖片載入中'">
-            <p><b>年齡：</b>${cat.age}</p>
-            <p><b>簡介：</b><br>${cat.desc}</p>
-            <button class="btn btn-m" style="width:100%; margin-top:15px;" onclick="window.open('https://line.me/R/msg/text/?詢問貓咪：${name}')">💬 LINE 預約/洽詢</button>
-        `);
-    }
-
-    window.onload = () => loadCats('waiting');
-</script>
-</body>
-</html>
+        
+        const content = `
+            <h2 style="color:var(--p); text-align:center; margin:0 0 15px 0;">${cat.name}</h2>
+            <img src="${cat.img}" style="width:100%; border-radius:20px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-bottom:15px;">
+            <p style="font-size:1rem; color:#333; margin-bottom:8px;"><b>關於孩子：</b></p>
+            <p style="color:#6
